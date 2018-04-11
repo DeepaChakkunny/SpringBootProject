@@ -4,7 +4,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.*;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.springboot.assignment.model.OneArrayRequest;
 import com.springboot.assignment.model.OneArrayResponse;
@@ -24,8 +26,8 @@ public class AssignmentController {
 		return service.getFibonacciNumber(n);
 	}
 	@RequestMapping(value="/ReverseWords",method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String reverseWordsInSentence(HttpServletRequest request, HttpServletResponse response,@RequestParam("sentence") String sentence) {
-		return service.reverseWordsInSentence(sentence);
+	public ResponseEntity<String> reverseWordsInSentence(HttpServletRequest request, HttpServletResponse response,@RequestParam("sentence") String sentence) {
+		return new ResponseEntity<>(service.reverseWordsInSentence(sentence),HttpStatus.OK);
 	}
 	@RequestMapping(value="/TriangleType",method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String getTriangleType(HttpServletRequest request, HttpServletResponse response,

@@ -9,8 +9,8 @@ import java.util.SortedSet;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
-
 import com.springboot.assignment.model.OneArrayRequest;
 import com.springboot.assignment.model.OneArrayResponse;
 import com.springboot.assignment.service.AssignmentService;
@@ -19,14 +19,7 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 	public String  getFibonacciNumber(String nThNum) {
 
-		int n;
-		try {
-			n=Integer.parseInt(nThNum);
-		}
-		catch (Exception e){
-
-			return "Error:Invalid Argument";
-		}
+		int n=Integer.parseInt(nThNum);
 		BigInteger x = new BigInteger(String.valueOf(1));
 
 
@@ -54,36 +47,28 @@ public class AssignmentServiceImpl implements AssignmentService {
 			senetenceReverse.append(" ");
 
 		}
-		return "\""+senetenceReverse.toString().trim()+"\"";
+		return formatString(senetenceReverse.toString().trim());
 
 
 	}
 	public String getTriangleType(String s1,String s2, String s3) {
-		int side1;
-		int side2;
-		int side3;
-		try {
-			side1=Integer.parseInt(s1);
-			side2=Integer.parseInt(s2);
-			side3=Integer.parseInt(s3);
-		}
-		catch (Exception e){
 
-			return "\""+"Error:Invalid Argument"+"\"";
-		}
+		int side1=Integer.parseInt(s1);
+		int side2=Integer.parseInt(s2);
+		int side3=Integer.parseInt(s3);
 
 		//A triangle is valid if sum of its two sides is greater than the third side.
 		if(!(side1+side2>side3 && side1+side3>side2 && side2+side3>side1)) {
-			return "\""+"Oops! Invalid triangle -These three sides cant form triangle"+"\"";
+			return formatString("Oops! Invalid triangle -These three sides cant form triangle");
 		}else if(side1==side2 && side2 ==side3) {
 
-			return "\""+"Equilateral"+"\"";
+			return formatString("Equilateral");
 		}
 		else if(side1==side2 || side1==side3 ||side2==side3) {
 
-			return "\""+"Isosceles"+"\"";
+			return formatString("Isosceles");
 		}else {
-			return "\""+"Scalene"+"\"";
+			return formatString("Scalene");
 		}
 
 
@@ -92,6 +77,9 @@ public class AssignmentServiceImpl implements AssignmentService {
 
 		SortedSet<Integer> array = new TreeSet<>();
 		List<List<Integer>> list =new ArrayList<>(request.getValues().values());
+		if(list.isEmpty()) {
+			throw new HttpMessageNotReadableException("Empty Body");
+		}
 		Iterator<List<Integer>> iterator =list.iterator();
 
 		while(iterator.hasNext()) {
@@ -100,6 +88,14 @@ public class AssignmentServiceImpl implements AssignmentService {
 		OneArrayResponse resp = new OneArrayResponse();
 		resp.setArray1(array.toArray());
 		return  resp;
+
+	}
+	public String formatString(String str) {
+
+		StringBuilder formattedStr =new StringBuilder();
+		formattedStr.append("\"");
+		formattedStr.append(str).append("\"");
+		return formattedStr.toString();
 
 	}
 
